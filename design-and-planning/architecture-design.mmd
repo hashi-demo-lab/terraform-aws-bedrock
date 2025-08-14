@@ -1,0 +1,220 @@
+---
+config:
+  theme: neo
+  flowchart:
+    curve: basis
+    layout: hierachical
+---
+flowchart TB
+    %% Title
+    subgraph TITLE["🏗️ terraform-aws-bedrock Module Architecture"]
+        direction LR
+        T1["📋 Comprehensive AI/ML Infrastructure"]
+        T2["🔒 Security-First Design"]
+        T3["🎯 Opinionated Simplification"]
+    end
+
+    %% Client Applications
+    subgraph CLIENT["👥 Client Applications"]
+        direction LR
+        WEB["🌐 Web Applications"]
+        API["⚡ API Services"]
+        MOB["📱 Mobile Apps"]
+        CLI["💻 CLI Tools"]
+    end
+
+    %% Network Layer
+    subgraph NETWORK["🌐 Network Layer"]
+        direction TB
+        VPC["🏢 VPC<br>Private Network"]
+        IGW["🚪 Internet Gateway"]
+        NAT["🔄 NAT Gateway"]
+        
+        subgraph SUBNETS["Subnets"]
+            PUB["🌍 Public Subnets"]
+            PRIV["🔒 Private Subnets"]
+        end
+        
+        subgraph ENDPOINTS["VPC Endpoints"]
+            BE["🔗 Bedrock Endpoint"]
+            S3E["📦 S3 Endpoint"]
+            CWLE["📊 CloudWatch Endpoint"]
+        end
+    end
+
+    %% Security Layer
+    subgraph SECURITY["🛡️ Security Layer"]
+        direction TB
+        
+        subgraph IAM["🔑 IAM Layer"]
+            BR["👤 Bedrock Service Role"]
+            AR["🤖 Agent Service Role"]
+            KBR["📚 Knowledge Base Role"]
+        end
+        
+        subgraph KMS["🔐 KMS Encryption"]
+            CMK["🔑 Customer Managed Key"]
+            ROT["🔄 Auto-Rotation Enabled"]
+        end
+        
+        subgraph SG["🚧 Security Groups"]
+            BESG["🔒 Bedrock Endpoints SG"]
+            OSSG["🔍 OpenSearch SG"]
+        end
+    end
+
+    %% Bedrock Services Layer
+    subgraph BEDROCK["🧠 AWS Bedrock Services"]
+        direction TB
+        
+        subgraph MODELS["🤖 Foundation Models"]
+            TITAN["🏛️ Amazon Titan"]
+            CLAUDE["🎭 Anthropic Claude"]
+            LLAMA["🦙 Meta Llama"]
+            COHERE["💬 Cohere"]
+        end
+        
+        subgraph GUARDRAILS["🛡️ Guardrails & Safety"]
+            GR["🚨 Content Guardrail"]
+            PII["🔍 PII Detection"]
+            WORD["📝 Word Filtering"]
+            TOPIC["💭 Topic Filtering"]
+        end
+        
+        subgraph CUSTOM["⚙️ Custom Models"]
+            CM["🏗️ Custom Model Training"]
+            PMT["⚡ Provisioned Throughput"]
+            IP["📊 Inference Profile"]
+        end
+    end
+
+    %% Agent Services Layer
+    subgraph AGENTS["🤖 Bedrock Agents"]
+        direction TB
+        
+        subgraph AGENT["👤 AI Agents"]
+            AG["🤖 Bedrock Agent"]
+            AA["🏷️ Agent Alias"]
+            AAG["⚡ Action Groups"]
+        end
+        
+        subgraph KB["📚 Knowledge Bases"]
+            VKB["🧮 Vector Knowledge Base"]
+            DS["📄 Data Sources"]
+            EMB["🔢 Embeddings"]
+        end
+        
+        subgraph PROMPT["💬 Prompt Management"]
+            PM["📝 Prompt Templates"]
+            PV["🔖 Prompt Versions"]
+        end
+    end
+
+    %% Storage Layer
+    subgraph STORAGE["💾 Storage Layer"]
+        direction TB
+        
+        subgraph S3STORAGE["📦 S3 Storage"]
+            S3M["📊 Model Artifacts"]
+            S3D["📄 Training Data"]
+            S3L["📝 Audit Logs"]
+        end
+        
+        subgraph OPENSEARCH["🔍 OpenSearch"]
+            OSS["☁️ Serverless Collection"]
+            VI["🧮 Vector Index"]
+            META["📋 Metadata Store"]
+        end
+        
+        subgraph BACKUP["💿 Backup & Recovery"]
+            S3B["📦 S3 Versioning"]
+            OSB["🔄 Index Snapshots"]
+            CRR["🌍 Cross-Region Replication"]
+        end
+    end
+
+    %% Monitoring Layer
+    subgraph MONITORING["📊 Monitoring & Logging"]
+        direction TB
+        
+        subgraph LOGGING["📝 Logging"]
+            MIL["📊 Model Invocation Logs"]
+            CWL["☁️ CloudWatch Logs"]
+            CT["🔍 CloudTrail Audit"]
+        end
+        
+        subgraph METRICS["📈 Metrics & Alarms"]
+            CWM["📊 CloudWatch Metrics"]
+            CWA["🚨 CloudWatch Alarms"]
+            DASH["📋 Custom Dashboards"]
+        end
+        
+        subgraph COST["💰 Cost Management"]
+            CE["💵 Cost Explorer"]
+            BUDGET["💰 Budget Alerts"]
+            TAG["🏷️ Cost Allocation Tags"]
+        end
+    end
+
+    %% Data Flow Arrows
+    CLIENT --> NETWORK
+    NETWORK --> SECURITY
+    SECURITY --> BEDROCK
+    BEDROCK --> AGENTS
+    AGENTS --> STORAGE
+    STORAGE --> MONITORING
+
+    %% Internal Connections
+    VPC --> SUBNETS
+    SUBNETS --> ENDPOINTS
+    IAM --> BR & AR & KBR
+    KMS --> CMK & ROT
+    
+    MODELS --> GUARDRAILS
+    GUARDRAILS --> CUSTOM
+    
+    AGENT --> KB
+    KB --> PROMPT
+    
+    S3STORAGE --> OPENSEARCH
+    OPENSEARCH --> BACKUP
+    
+    LOGGING --> METRICS
+    METRICS --> COST
+
+    %% Security Connections
+    BR -.->|"Assumes Role"| MODELS
+    AR -.->|"Assumes Role"| AGENT
+    KBR -.->|"Assumes Role"| KB
+    CMK -.->|"Encrypts"| S3STORAGE
+    CMK -.->|"Encrypts"| OPENSEARCH
+    CMK -.->|"Encrypts"| CWL
+
+    %% Data Flow
+    DS -->|"Ingests Data"| VKB
+    VKB -->|"Stores Vectors"| VI
+    AG -->|"Queries"| VKB
+    AG -->|"Uses"| MODELS
+    MODELS -->|"Processes"| GR
+    
+    %% Monitoring Flow
+    BEDROCK -.->|"Logs Invocations"| MIL
+    AGENTS -.->|"Generates Metrics"| CWM
+    ALL -.->|"Audit Trail"| CT
+
+    %% Styling
+    classDef clientStyle fill:#e1f5fe,stroke:#0277bd,color:#01579b,font-weight:bold
+    classDef networkStyle fill:#f3e5f5,stroke:#7b1fa2,color:#4a148c,font-weight:bold
+    classDef securityStyle fill:#fff3e0,stroke:#f57c00,color:#e65100,font-weight:bold
+    classDef bedrockStyle fill:#e8f5e8,stroke:#2e7d32,color:#1b5e20,font-weight:bold
+    classDef agentStyle fill:#e3f2fd,stroke:#1976d2,color:#0d47a1,font-weight:bold
+    classDef storageStyle fill:#fce4ec,stroke:#c2185b,color:#880e4f,font-weight:bold
+    classDef monitorStyle fill:#fff8e1,stroke:#f9a825,color:#f57f17,font-weight:bold
+
+    class CLIENT,WEB,API,MOB,CLI clientStyle
+    class NETWORK,VPC,IGW,NAT,SUBNETS,ENDPOINTS,PUB,PRIV,BE,S3E,CWLE networkStyle
+    class SECURITY,IAM,KMS,SG,BR,AR,KBR,CMK,ROT,BESG,OSSG securityStyle
+    class BEDROCK,MODELS,GUARDRAILS,CUSTOM,TITAN,CLAUDE,LLAMA,COHERE,GR,PII,WORD,TOPIC,CM,PMT,IP bedrockStyle
+    class AGENTS,AGENT,KB,PROMPT,AG,AA,AAG,VKB,DS,EMB,PM,PV agentStyle
+    class STORAGE,S3STORAGE,OPENSEARCH,BACKUP,S3M,S3D,S3L,OSS,VI,META,S3B,OSB,CRR storageStyle
+    class MONITORING,LOGGING,METRICS,COST,MIL,CWL,CT,CWM,CWA,DASH,CE,BUDGET,TAG monitorStyle
